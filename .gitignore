@@ -13,6 +13,7 @@ node_modules
 .mf
 .rollup.cache
 tsconfig.tsbuildinfo
+.history
 
 # Logs
 logs
