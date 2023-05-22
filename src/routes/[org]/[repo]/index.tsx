@@ -6,23 +6,23 @@ import {
   z,
   zod$,
 } from "@builder.io/qwik-city";
-import { Octokit } from "octokit";
 import { createServerClient } from "supabase-auth-helpers-qwik";
+import type { paths } from "@octokit/openapi-types";
+
+type OrgRepoResponse =
+  paths["/repos/{owner}/{repo}"]["get"]["responses"]["200"]["content"]["application/json"];
 
 export const useRepository = routeLoader$(async ({ params }) => {
   const org = params.org;
   const repo = params.repo;
 
-  const octokit = new Octokit({
-    auth: import.meta.env.VITE_GITHUB_ACCESS_TOKEN,
+  const response = await fetch(`https://api.github.com/repos/${org}/${repo}`, {
+    headers: {
+      "X-GitHub-Api-Version": "2022-11-28",
+      Authorization: "Bearer " + import.meta.env.VITE_GITHUB_ACCESS_TOKEN,
+    },
   });
-
-  const repository = await octokit.request("GET /repos/{owner}/{repo}", {
-    owner: org,
-    repo,
-    headers: { "X-GitHub-Api-Version": "2022-11-28" },
-  });
-
+  const repository = (await response.json()) as OrgRepoResponse;
   return repository;
 });
 
@@ -93,7 +93,7 @@ export default component$(() => {
   return (
     <div>
       <div>
-        <b>Repo:</b> {repository.value.data.name}
+        <b>Repo:</b> {repository.value.name}
         <Form action={setFavoriteAction}>
           <input
             type="hidden"
@@ -106,7 +106,7 @@ export default component$(() => {
         </Form>
       </div>
       <div>
-        <b>Description:</b> {repository.value.data.description}
+        <b>Description:</b> {repository.value.description}
       </div>
     </div>
   );

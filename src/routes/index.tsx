@@ -6,11 +6,11 @@ import {
   useTask$,
 } from "@builder.io/qwik";
 import {
-  DocumentHead,
-  RequestHandler,
+  type DocumentHead,
+  type RequestHandler,
   routeLoader$,
 } from "@builder.io/qwik-city";
-import { Octokit } from "octokit";
+import type { paths } from "@octokit/openapi-types";
 import { createServerClient } from "supabase-auth-helpers-qwik";
 
 export interface Favorite {
@@ -20,22 +20,28 @@ export interface Favorite {
   repo: string;
 }
 
-const octokit = new Octokit({
-  auth: import.meta.env.VITE_GITHUB_ACCESS_TOKEN,
-});
+type SearchUsersResponse =
+  paths["/search/users"]["get"]["responses"]["200"]["content"]["application/json"];
 
 export const onPost: RequestHandler = async ({ json, query }) => {
   const queryText = query.get("q") as string;
   if (!queryText) {
     json(200, []);
   } else {
-    const response = await octokit.request("GET /search/users", {
-      headers: { "X-GitHub-Api-Version": "2022-11-28" },
-      q: queryText,
-    });
+    const response = await fetch(
+      "https://api.github.com/search/users?q=" + queryText,
+      {
+        headers: {
+          "X-GitHub-Api-Version": "2022-11-28",
+          Authorization: "Bearer " + import.meta.env.VITE_GITHUB_ACCESS_TOKEN,
+          Accept: "application/vnd.github+json",
+        },
+      }
+    );
+    const data = (await response.json()) as SearchUsersResponse;
     json(
       200,
-      response.data.items.map((item) => item.login)
+      data.items.map((item) => item.login)
     );
   }
 };

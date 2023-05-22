@@ -1,17 +1,22 @@
 import { component$ } from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
-import { Octokit } from "octokit";
+import type { paths } from "@octokit/openapi-types";
+
+type OrgReposResponse =
+  paths["/users/{username}/repos"]["get"]["responses"]["200"]["content"]["application/json"];
 
 export const useRepositories = routeLoader$(async ({ params }) => {
-  const octokit = new Octokit({
-    auth: import.meta.env.VITE_GITHUB_ACCESS_TOKEN,
-  });
-
-  const repository = await octokit.request("GET /orgs/{org}/repos", {
-    org: params.org,
-    headers: { "X-GitHub-Api-Version": "2022-11-28" },
-  });
-
+  const response = await fetch(
+    `https://api.github.com/users/${params.org}/repos`,
+    {
+      headers: {
+        "X-GitHub-Api-Version": "2022-11-28",
+        Authorization: "Bearer " + import.meta.env.VITE_GITHUB_ACCESS_TOKEN,
+      },
+    }
+  );
+  const repository = (await response.json()) as OrgReposResponse;
+  console.log(params.org, repository);
   return repository;
 });
 
@@ -20,7 +25,7 @@ export default component$(() => {
   return (
     <div>
       <ul>
-        {repositories.value.data!.map((repo) => (
+        {repositories.value.map((repo) => (
           <li key={repo.id}>
             <a href={`/${repo.full_name}`}>{repo.name}</a>
           </li>

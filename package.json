@@ -41,8 +41,8 @@
     "wrangler": "^2.20.0"
   },
   "dependencies": {
+    "@octokit/openapi-types": "^17.2.0",
     "@supabase/supabase-js": "^2.22.0",
-    "octokit": "^2.0.15",
     "supabase-auth-helpers-qwik": "^0.0.3",
     "zod": "^3.21.4"
   }
