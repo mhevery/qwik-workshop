@@ -23,7 +23,7 @@ export interface Favorite {
 type SearchUsersResponse =
   paths["/search/users"]["get"]["responses"]["200"]["content"]["application/json"];
 
-export const onPost: RequestHandler = async ({ json, query }) => {
+export const onPost: RequestHandler = async ({ json, query, env }) => {
   const queryText = query.get("q") as string;
   if (!queryText) {
     json(200, []);
@@ -34,7 +34,7 @@ export const onPost: RequestHandler = async ({ json, query }) => {
         headers: {
           "User-Agent": "Qwik Workshop",
           "X-GitHub-Api-Version": "2022-11-28",
-          Authorization: "Bearer " + import.meta.env.VITE_GITHUB_ACCESS_TOKEN,
+          Authorization: "Bearer " + env.get("PRIVATE_GITHUB_ACCESS_TOKEN"),
         },
       }
     );
@@ -53,8 +53,8 @@ export const useFavoriteRepositories = routeLoader$<Favorite[]>(
       | undefined;
     if (email) {
       const supabaseClient = createServerClient(
-        requestEv.env.get("PUBLIC_SUPABASE_URL")!,
-        requestEv.env.get("PUBLIC_SUPABASE_ANON_KEY")!,
+        requestEv.env.get("PRIVATE_SUPABASE_URL")!,
+        requestEv.env.get("PRIVATE_SUPABASE_ANON_KEY")!,
         requestEv
       );
       const { data: favorites, error } = await supabaseClient
@@ -101,8 +101,8 @@ export default component$(() => {
       <ul>
         {favoriteRepositories.value.map((fav) => (
           <li key={fav.id}>
-            <a href={"/" + fav.org + "/"}>{fav.org}</a>/
-            <a href={"/" + fav.org + "/" + fav.repo}>{fav.repo}</a>
+            <a href={"/github/" + fav.org + "/"}>{fav.org}</a>/
+            <a href={"/github/" + fav.org + "/" + fav.repo}>{fav.repo}</a>
           </li>
         ))}
       </ul>

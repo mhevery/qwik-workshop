@@ -3,6 +3,7 @@ import {
   Form,
   routeAction$,
   routeLoader$,
+  useLocation,
   z,
   zod$,
 } from "@builder.io/qwik-city";
@@ -12,7 +13,7 @@ import type { paths } from "@octokit/openapi-types";
 type OrgRepoResponse =
   paths["/repos/{owner}/{repo}"]["get"]["responses"]["200"]["content"]["application/json"];
 
-export const useRepository = routeLoader$(async ({ params }) => {
+export const useRepository = routeLoader$(async ({ params, env }) => {
   const org = params.org;
   const repo = params.repo;
 
@@ -20,7 +21,7 @@ export const useRepository = routeLoader$(async ({ params }) => {
     headers: {
       "User-Agent": "Qwik Workshop",
       "X-GitHub-Api-Version": "2022-11-28",
-      Authorization: "Bearer " + import.meta.env.VITE_GITHUB_ACCESS_TOKEN,
+      Authorization: "Bearer " + env.get("PRIVATE_GITHUB_ACCESS_TOKEN"),
     },
   });
   const repository = (await response.json()) as OrgRepoResponse;
@@ -35,8 +36,8 @@ export const useIsFavorite = routeLoader$(async (requestEv) => {
   const repo = requestEv.params.repo;
   if (email) {
     const supabaseClient = createServerClient(
-      requestEv.env.get("PUBLIC_SUPABASE_URL")!,
-      requestEv.env.get("PUBLIC_SUPABASE_ANON_KEY")!,
+      requestEv.env.get("PRIVATE_SUPABASE_URL")!,
+      requestEv.env.get("PRIVATE_SUPABASE_ANON_KEY")!,
       requestEv
     );
     const { data: favorite, error } = await supabaseClient
@@ -64,8 +65,8 @@ export const useSetFavoriteAction = routeAction$(
     const repo = requestEv.params.repo;
     console.log("SET FAVORITE", favorite, email, org, repo);
     const supabaseClient = createServerClient(
-      requestEv.env.get("PUBLIC_SUPABASE_URL")!,
-      requestEv.env.get("PUBLIC_SUPABASE_ANON_KEY")!,
+      requestEv.env.get("PRIVATE_SUPABASE_URL")!,
+      requestEv.env.get("PRIVATE_SUPABASE_ANON_KEY")!,
       requestEv
     );
     if (email) {
@@ -91,8 +92,14 @@ export default component$(() => {
   const repository = useRepository();
   const isFavorite = useIsFavorite();
   const setFavoriteAction = useSetFavoriteAction();
+  const location = useLocation();
   return (
     <div>
+      <h1>
+        Ropository:{" "}
+        <a href={"/github/" + location.params.org}>{location.params.org}</a>/
+        {location.params.repo}
+      </h1>
       <div>
         <b>Repo:</b> {repository.value.name}
         <Form action={setFavoriteAction}>
