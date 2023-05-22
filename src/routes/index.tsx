@@ -32,9 +32,9 @@ export const onPost: RequestHandler = async ({ json, query }) => {
       "https://api.github.com/search/users?q=" + queryText,
       {
         headers: {
+          "User-Agent": "Qwik Workshop",
           "X-GitHub-Api-Version": "2022-11-28",
           Authorization: "Bearer " + import.meta.env.VITE_GITHUB_ACCESS_TOKEN,
-          Accept: "application/vnd.github+json",
         },
       }
     );

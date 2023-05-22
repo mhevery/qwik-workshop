@@ -10,14 +10,20 @@ export const useRepositories = routeLoader$(async ({ params }) => {
     `https://api.github.com/users/${params.org}/repos`,
     {
       headers: {
+        "User-Agent": "Qwik Workshop",
         "X-GitHub-Api-Version": "2022-11-28",
         Authorization: "Bearer " + import.meta.env.VITE_GITHUB_ACCESS_TOKEN,
       },
     }
   );
-  const repository = (await response.json()) as OrgReposResponse;
-  console.log(params.org, repository);
-  return repository;
+  const text = await response.text();
+  try {
+    const repository = JSON.parse(text) as OrgReposResponse;
+    return repository;
+  } catch (e) {
+    console.error("Failed to parse JSON", text);
+    throw e;
+  }
 });
 
 export default component$(() => {

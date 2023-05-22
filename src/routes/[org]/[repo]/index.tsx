@@ -18,6 +18,7 @@ export const useRepository = routeLoader$(async ({ params }) => {
 
   const response = await fetch(`https://api.github.com/repos/${org}/${repo}`, {
     headers: {
+      "User-Agent": "Qwik Workshop",
       "X-GitHub-Api-Version": "2022-11-28",
       Authorization: "Bearer " + import.meta.env.VITE_GITHUB_ACCESS_TOKEN,
     },
