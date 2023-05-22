@@ -73,28 +73,6 @@ export const useFavoriteRepositories = routeLoader$<Favorite[]>(
 
 export default component$(() => {
   const favoriteRepositories = useFavoriteRepositories();
-  const query = useSignal("");
-  const debounceQuery = useSignal("");
-  useTask$(async ({ track, cleanup }) => {
-    track(query);
-    const id = setTimeout(() => {
-      debounceQuery.value = query.value;
-    }, 200);
-    cleanup(() => clearTimeout(id));
-  });
-
-  const results = useResource$(async ({ track, cleanup }) => {
-    track(debounceQuery);
-    if (!debounceQuery.value) return [];
-
-    const controller = new AbortController();
-    cleanup(() => controller.abort());
-    const response = await fetch("/?q=" + debounceQuery.value, {
-      method: "POST",
-      signal: controller.signal,
-    });
-    return (await response.json()) as string[];
-  });
   return (
     <>
       <h1>Qwik Github</h1>
@@ -106,6 +84,35 @@ export default component$(() => {
           </li>
         ))}
       </ul>
+      <Search />
+    </>
+  );
+});
+
+export const Search = component$(() => {
+  const query = useSignal("");
+  const debounceQuery = useSignal("");
+  useTask$(async ({ track, cleanup }) => {
+    track(query);
+    const id = setTimeout(() => {
+      debounceQuery.value = query.value;
+    }, 200);
+    cleanup(() => clearTimeout(id));
+  });
+  const results = useResource$(async ({ track, cleanup }) => {
+    track(debounceQuery);
+    if (!debounceQuery.value) return [];
+
+    const controller = new AbortController();
+    cleanup(() => controller.abort());
+    const response = await fetch("/github/?q=" + debounceQuery.value, {
+      method: "POST",
+      signal: controller.signal,
+    });
+    return (await response.json()) as string[];
+  });
+  return (
+    <>
       Search: <input bind:value={query} />
       <Resource
         value={results}
@@ -114,7 +121,7 @@ export default component$(() => {
           <ul>
             {results.map((org) => (
               <li key={org}>
-                <a href={"/" + org}>{org}</a>
+                <a href={"/github/" + org}>{org}</a>
               </li>
             ))}
           </ul>

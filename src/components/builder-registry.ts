@@ -1,5 +1,6 @@
-import type { RegisteredComponent } from '@builder.io/sdk-qwik';
-import { MyFunComponent } from './fun/fun';
+import type { RegisteredComponent } from "@builder.io/sdk-qwik";
+import { MyFunComponent } from "./fun/fun";
+import { Search } from "../routes/github";
 
 // You will find these components in the "custom components"
 // section of the visual editor
@@ -9,13 +10,18 @@ import { MyFunComponent } from './fun/fun';
 export const CUSTOM_COMPONENTS: RegisteredComponent[] = [
   {
     component: MyFunComponent,
-    name: 'MyFunComponent',
+    name: "MyFunComponent",
     inputs: [
       {
-        name: 'text',
-        type: 'string',
-        defaultValue: 'Hello world',
+        name: "text",
+        type: "string",
+        defaultValue: "Hello world",
       },
     ],
+  },
+  {
+    component: Search,
+    name: "GitHub Search Component",
+    inputs: [],
   },
 ];
