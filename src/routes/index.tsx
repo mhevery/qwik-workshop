@@ -5,8 +5,20 @@ import {
   useSignal,
   useTask$,
 } from "@builder.io/qwik";
-import type { DocumentHead, RequestHandler } from "@builder.io/qwik-city";
+import {
+  DocumentHead,
+  RequestHandler,
+  routeLoader$,
+} from "@builder.io/qwik-city";
 import { Octokit } from "octokit";
+import { createServerClient } from "supabase-auth-helpers-qwik";
+
+export interface Favorite {
+  id: string;
+  email: string;
+  org: string;
+  repo: string;
+}
 
 const octokit = new Octokit({
   auth: import.meta.env.VITE_GITHUB_ACCESS_TOKEN,
@@ -28,7 +40,33 @@ export const onPost: RequestHandler = async ({ json, query }) => {
   }
 };
 
+export const useFavoriteRepositories = routeLoader$<Favorite[]>(
+  async (requestEv) => {
+    const email = requestEv.sharedMap.get("session")?.user?.email as
+      | string
+      | undefined;
+    if (email) {
+      const supabaseClient = createServerClient(
+        requestEv.env.get("PUBLIC_SUPABASE_URL")!,
+        requestEv.env.get("PUBLIC_SUPABASE_ANON_KEY")!,
+        requestEv
+      );
+      const { data: favorites, error } = await supabaseClient
+        .from("favorite")
+        .select("*")
+        .eq("email", email);
+      if (error) {
+        throw error;
+      }
+
+      return favorites as Favorite[];
+    }
+    return [];
+  }
+);
+
 export default component$(() => {
+  const favoriteRepositories = useFavoriteRepositories();
   const query = useSignal("");
   const debounceQuery = useSignal("");
   useTask$(async ({ track, cleanup }) => {
@@ -54,6 +92,14 @@ export default component$(() => {
   return (
     <>
       <h1>Qwik Github</h1>
+      <ul>
+        {favoriteRepositories.value.map((fav) => (
+          <li key={fav.id}>
+            <a href={"/" + fav.org + "/"}>{fav.org}</a>/
+            <a href={"/" + fav.org + "/" + fav.repo}>{fav.repo}</a>
+          </li>
+        ))}
+      </ul>
       Search: <input bind:value={query} />
       <Resource
         value={results}

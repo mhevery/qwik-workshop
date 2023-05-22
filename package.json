@@ -38,7 +38,9 @@
     "vite-tsconfig-paths": "4.2.0"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.22.0",
     "octokit": "^2.0.15",
+    "supabase-auth-helpers-qwik": "^0.0.3",
     "zod": "^3.21.4"
   }
 }

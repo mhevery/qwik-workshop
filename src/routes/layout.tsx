@@ -1,8 +1,10 @@
-import { component$, Slot } from "@builder.io/qwik";
+import { component$, Slot, useStylesScoped$ } from "@builder.io/qwik";
 import { useAuthSession, useAuthSignout, useAuthSignin } from "./plugin@auth";
 import { Form, useLocation } from "@builder.io/qwik-city";
+import CSS from "./layout.css?inline";
 
 export default component$(() => {
+  useStylesScoped$(CSS);
   const session = useAuthSession();
   const authSignin = useAuthSignin();
   const authSignout = useAuthSignout();

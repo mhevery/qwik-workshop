@@ -1,0 +1,11 @@
+header {
+  display: flex;
+  justify-content: right;
+  border-bottom: 1px solid #ccc;
+}
+
+img {
+  border-radius: 50%;
+  vertical-align: middle;
+  padding: 0.5em;
+}
