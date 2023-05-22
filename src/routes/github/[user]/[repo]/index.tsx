@@ -14,10 +14,10 @@ type OrgRepoResponse =
   paths["/repos/{owner}/{repo}"]["get"]["responses"]["200"]["content"]["application/json"];
 
 export const useRepository = routeLoader$(async ({ params, env }) => {
-  const org = params.org;
+  const user = params.user;
   const repo = params.repo;
 
-  const response = await fetch(`https://api.github.com/repos/${org}/${repo}`, {
+  const response = await fetch(`https://api.github.com/repos/${user}/${repo}`, {
     headers: {
       "User-Agent": "Qwik Workshop",
       "X-GitHub-Api-Version": "2022-11-28",
@@ -32,7 +32,7 @@ export const useIsFavorite = routeLoader$(async (requestEv) => {
   const email = requestEv.sharedMap.get("session")?.user?.email as
     | string
     | undefined;
-  const org = requestEv.params.org;
+  const user = requestEv.params.user;
   const repo = requestEv.params.repo;
   if (email) {
     const supabaseClient = createServerClient(
@@ -44,13 +44,13 @@ export const useIsFavorite = routeLoader$(async (requestEv) => {
       .from("favorite")
       .select("*")
       .eq("email", email)
-      .eq("org", org)
+      .eq("user", user)
       .eq("repo", repo);
     if (error) {
       console.log("ERROR", error);
       throw error;
     }
-    console.log("IS FAVORITE", favorite?.length, email, org, repo);
+    console.log("IS FAVORITE", favorite?.length, email, user, repo);
     return (favorite?.length || 0) > 0;
   }
   return false;
@@ -61,9 +61,9 @@ export const useSetFavoriteAction = routeAction$(
     const email = requestEv.sharedMap.get("session")?.user?.email as
       | string
       | undefined;
-    const org = requestEv.params.org;
+    const user = requestEv.params.user;
     const repo = requestEv.params.repo;
-    console.log("SET FAVORITE", favorite, email, org, repo);
+    console.log("SET FAVORITE", favorite, email, user, repo);
     const supabaseClient = createServerClient(
       requestEv.env.get("PRIVATE_SUPABASE_URL")!,
       requestEv.env.get("PRIVATE_SUPABASE_ANON_KEY")!,
@@ -74,13 +74,13 @@ export const useSetFavoriteAction = routeAction$(
         .from("favorite")
         .delete()
         .eq("email", email)
-        .eq("org", org)
+        .eq("user", user)
         .eq("repo", repo);
     }
     if (favorite && email) {
       await supabaseClient.from("favorite").upsert({
         email,
-        org,
+        user,
         repo,
       });
     }
@@ -97,7 +97,7 @@ export default component$(() => {
     <div>
       <h1>
         Ropository:{" "}
-        <a href={"/github/" + location.params.org}>{location.params.org}</a>/
+        <a href={"/github/" + location.params.user}>{location.params.user}</a>/
         {location.params.repo}
       </h1>
       <div>

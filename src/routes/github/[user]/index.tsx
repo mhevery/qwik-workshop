@@ -7,7 +7,7 @@ type OrgReposResponse =
 
 export const useRepositories = routeLoader$(async ({ params, env }) => {
   const response = await fetch(
-    `https://api.github.com/users/${params.org}/repos`,
+    `https://api.github.com/users/${params.user}/repos`,
     {
       headers: {
         "User-Agent": "Qwik Workshop",
@@ -31,7 +31,7 @@ export default component$(() => {
   const name = useLocation();
   return (
     <div>
-      <h1>Repositories for {name.params.org}</h1>
+      <h1>Repositories for {name.params.user}</h1>
       <ul>
         {repositories.value.map((repo) => (
           <li key={repo.id}>

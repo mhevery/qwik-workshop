@@ -16,7 +16,7 @@ import { createServerClient } from "supabase-auth-helpers-qwik";
 export interface Favorite {
   id: string;
   email: string;
-  org: string;
+  user: string;
   repo: string;
 }
 
@@ -79,8 +79,8 @@ export default component$(() => {
       <ul>
         {favoriteRepositories.value.map((fav) => (
           <li key={fav.id}>
-            <a href={"/github/" + fav.org + "/"}>{fav.org}</a>/
-            <a href={"/github/" + fav.org + "/" + fav.repo}>{fav.repo}</a>
+            <a href={"/github/" + fav.user + "/"}>{fav.user}</a>/
+            <a href={"/github/" + fav.user + "/" + fav.repo}>{fav.repo}</a>
           </li>
         ))}
       </ul>
@@ -119,9 +119,9 @@ export const Search = component$(() => {
         onPending={() => <li>Loading...</li>}
         onResolved={(results) => (
           <ul>
-            {results.map((org) => (
-              <li key={org}>
-                <a href={"/github/" + org}>{org}</a>
+            {results.map((user) => (
+              <li key={user}>
+                <a href={"/github/" + user}>{user}</a>
               </li>
             ))}
           </ul>
