@@ -41,3 +41,6 @@ lerna-debug.log*
 
 # Vercel
 .vercel
+
+# Cloudflare
+functions/**/*.js
