@@ -96,7 +96,7 @@ export default component$(() => {
   return (
     <div>
       <h1>
-        Ropository:{" "}
+        Repository:{" "}
         <a href={"/github/" + location.params.user}>{location.params.user}</a>/
         {location.params.repo}
       </h1>
