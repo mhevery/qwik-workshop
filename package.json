@@ -37,5 +37,9 @@
     "undici": "5.22.1",
     "vite": "4.3.5",
     "vite-tsconfig-paths": "4.2.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.22.0",
+    "supabase-auth-helpers-qwik": "^0.0.3"
   }
 }
