@@ -1,6 +1,12 @@
-import { component$ } from "@builder.io/qwik";
+import {
+  component$,
+  useComputed$,
+  useSignal,
+  useStylesScoped$,
+} from "@builder.io/qwik";
 import { routeLoader$, useLocation } from "@builder.io/qwik-city";
 import type { paths } from "@octokit/openapi-types";
+import CSS from "./index.css?inline";
 
 type OrgReposResponse =
   paths["/users/{username}/repos"]["get"]["responses"]["200"]["content"]["application/json"];
@@ -16,26 +22,27 @@ export const useRepositories = routeLoader$(async ({ params, env }) => {
       },
     }
   );
-  const text = await response.text();
-  try {
-    const repository = JSON.parse(text) as OrgReposResponse;
-    return repository;
-  } catch (e) {
-    console.error("Failed to parse JSON", text);
-    throw e;
-  }
+  return (await response.json()) as OrgReposResponse;
 });
 
 export default component$(() => {
+  useStylesScoped$(CSS);
+  const filter = useSignal("");
   const repositories = useRepositories();
-  const name = useLocation();
+  const filteredRepos = useComputed$(() =>
+    repositories.value.filter((repo) =>
+      repo.full_name.toLowerCase().includes(filter.value.toLowerCase())
+    )
+  );
+  const location = useLocation();
   return (
     <div>
-      <h1>Repositories for {name.params.user}</h1>
-      <ul>
-        {repositories.value.map((repo) => (
-          <li key={repo.id}>
-            <a href={`/github/${repo.full_name}`}>{repo.name}</a>
+      <h1>Repositories for {location.params.user}</h1>
+      <input type="text" bind:value={filter} />
+      <ul class="card-list">
+        {filteredRepos.value.map((repo) => (
+          <li key={repo.full_name} class="card-item">
+            <a href={`/github/${repo.full_name}`}>{repo.full_name}</a>
           </li>
         ))}
       </ul>

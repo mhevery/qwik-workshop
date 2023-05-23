@@ -1,6 +1,6 @@
 import type { RegisteredComponent } from "@builder.io/sdk-qwik";
 import { MyFunComponent } from "./fun/fun";
-import { Search } from "../routes/github";
+import Search from "../routes/github/index";
 
 // You will find these components in the "custom components"
 // section of the visual editor
