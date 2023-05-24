@@ -8,7 +8,7 @@ import {
 import { server$ } from "@builder.io/qwik-city";
 import type { paths } from "@octokit/openapi-types";
 
-type SearchUsersResponse =
+export type SearchUsersResponse =
   paths["/search/users"]["get"]["responses"]["200"]["content"]["application/json"];
 
 const fetchUsers = server$(async function (query: string) {

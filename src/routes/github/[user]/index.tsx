@@ -8,7 +8,7 @@ import { routeLoader$, useLocation } from "@builder.io/qwik-city";
 import type { paths } from "@octokit/openapi-types";
 import CSS from "./index.css?inline";
 
-type OrgReposResponse =
+export type OrgReposResponse =
   paths["/users/{username}/repos"]["get"]["responses"]["200"]["content"]["application/json"];
 
 export const useRepositories = routeLoader$(async ({ params, env }) => {
