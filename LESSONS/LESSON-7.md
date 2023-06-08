@@ -1,4 +1,4 @@
-## Lesson 6: Deploy to Cloudflare
+## Lesson 7: Deploy to Cloudflare
 
 **GitHub**: [Start](https://github.com/mhevery/qwik-workshop/tree/lesson-6) => [End](https://github.com/mhevery/qwik-workshop/tree/lesson-7) ([diff](https://github.com/mhevery/qwik-workshop/compare/lesson-6...lesson-7))
 
