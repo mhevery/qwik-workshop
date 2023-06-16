@@ -6,7 +6,7 @@
 2. update `vite.config.js` to include:
    ```typescript
    optimizeDeps: {
-     include: ["@auth/core"];
+     include: ["@auth/core"]
    }
    ```
 3. Follow instructions in `.env` file to create a GitHub OAuth App.
