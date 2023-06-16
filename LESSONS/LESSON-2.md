@@ -6,7 +6,7 @@
 2. update `vite.config.js` to include:
    ```typescript
    optimizeDeps: {
-     include: ["@auth/core"];
+     include: ["@auth/core"]
    }
    ```
 3. Follow instructions in `.env` file to create a GitHub OAuth App.
@@ -48,6 +48,7 @@
                </div>
              ) : (
                <Form action={authSignin}>
+                <!-- Choose Github as auth provider by default (It leads to not showing provider selector page) -->
                  <input type="hidden" name="providerId" value="github" />
                  <input
                    type="hidden"

@@ -37,9 +37,9 @@
 
 5. Add `useRepositories()` to the component and render all of the repositories
    ```typescript
-   <ul>
+   <ul class="card-list">
      {repositories.value.map((repo) => (
-       <li key={repo.full_name}>
+       <li key={repo.full_name} class="card-item">
          <a href={`/github/${repo.full_name}`}>{repo.full_name}</a>
        </li>
      ))}
