@@ -5,6 +5,11 @@ import { builderDevTools } from "@builder.io/dev-tools/vite";
 
 export default defineConfig(() => {
   return {
-    plugins: [builderDevTools(), qwikCity(), qwikVite()],
+    optimizeDeps: {
+      include: ["@auth/core"]
+    },
+    plugins: [
+      builderDevTools(), 
+      qwikCity(), qwikVite()],
   };
 });

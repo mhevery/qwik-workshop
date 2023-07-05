@@ -1,5 +1,6 @@
 import type { RegisteredComponent } from "@builder.io/sdk-qwik";
 import Counter from "./counter/counter";
+import Search from "./search/search";
 
 /**
  * This array is used to integrate custom components within Builder.
@@ -19,6 +20,16 @@ export const CUSTOM_COMPONENTS: RegisteredComponent[] = [
       {
         name: "initialValue",
         type: "number",
+      },
+    ],
+  },
+  {
+    component: Search,
+    name: "Search",
+    inputs: [
+      {
+        name: "query",
+        type: "string",
       },
     ],
   },
