@@ -24,18 +24,41 @@
     "qwik": "qwik"
   },
   "devDependencies": {
+    "@auth/core": "^0.13.0",
+    "@builder.io/dev-tools": "^0.0.44",
     "@builder.io/qwik": "^1.2.17",
+    "@builder.io/qwik-auth": "0.1.1",
     "@builder.io/qwik-city": "^1.2.17",
+    "@builder.io/qwik-react": "0.5.0",
+    "@builder.io/sdk-qwik": "^0.4.5",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.13.0",
+    "@mui/x-data-grid": "^6.4.0",
+    "@octokit/openapi-types": "^19.0.2",
     "@types/eslint": "^8.44.4",
     "@types/node": "^20.8.4",
+    "@types/react": "^18.2.28",
+    "@types/react-dom": "^18.2.13",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
+    "autoprefixer": "^10.4.14",
+    "daisyui": "^3.9.4",
     "eslint": "^8.51.0",
     "eslint-plugin-qwik": "^1.2.17",
+    "postcss": "^8.4.31",
     "prettier": "^3.0.3",
+    "prettier-plugin-tailwindcss": "^0.5.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tailwindcss": "3.3.3",
     "typescript": "^5.2.2",
     "undici": "^5.26.0",
     "vite": "^4.4.11",
     "vite-tsconfig-paths": "^4.2.1"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.4",
+    "supabase-auth-helpers-qwik": "^0.0.3"
   }
 }
